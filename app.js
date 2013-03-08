@@ -14,7 +14,7 @@ http.createServer(app).listen(app.get('port'), function(){
 // для начала нужно:
 //   * установить mongodb
 //   * запустить процесс mongod
-// просматриваем содержимое таблицы
+// просматриваем содержимое коллекции
 db.collection('test').find().toArray(function(err, result) {
     if (err) throw err;
     console.log( result );
