@@ -7,15 +7,4 @@ var   http = require('http')
 express.configure();
 
 // запускаем сервер
-http.createServer(app).listen(app.get('port'), function(){
-    console.log("Express server listening on port " + app.get('port'));
-});
-
-// для начала нужно:
-//   * установить mongodb
-//   * запустить процесс mongod
-// просматриваем содержимое коллекции
-db.collection('test').find().toArray(function(err, result) {
-    if (err) throw err;
-    console.log( result );
-});
+express.startServer(http, app);

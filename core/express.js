@@ -3,7 +3,7 @@ var   express = require('express')
     , routes = require('./routes.js')
     , path = require('path');
 
-exports.configure = function() {
+function configure() {
 
     app
         .configure(function(){
@@ -23,5 +23,16 @@ exports.configure = function() {
 
 }
 
+function startServer(http, app) {
+
+    http.createServer(app).listen(app.get('port'), function(){
+        console.log("Express server listening on port " + app.get('port'));
+    });
+
+}
+
+
+exports.configure = configure;
+exports.startServer = startServer;
 exports.express = express;
 exports.app = app;
