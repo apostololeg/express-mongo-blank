@@ -5,4 +5,5 @@ Simple blank for fast starting new project.
 ###Сomponents
   * express.js
   * mongodb
-  * ejs
+  * socket.io
+  * jade

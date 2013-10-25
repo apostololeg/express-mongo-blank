@@ -1,10 +1,15 @@
-var   http = require('http')
-    , db = require('mongoskin').db('localhost:27017/test')
-    , express = require('./core/express.js')
-    , app = express.app;
+var http = require('http'),
+    db = require('./core/mongodb.js'),
+    express = require('./core/express.js'),
+    app = express.express(),
+    server = http.createServer(app),
+    socket = require('./core/socket.io.js');
 
 // настройка express
-express.configure();
+express.configure(app);
+
+// настройка socket.io
+socket.configure(server);
 
 // запускаем сервер
-express.startServer(http, app);
+express.startServer(server, app.get('port'));

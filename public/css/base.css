@@ -1,0 +1,23 @@
+/* common */
+*{margin: 0;padding: 0;}
+/* common */
+
+
+/* controls */
+.input
+{
+    font-size: 20px;
+
+    display: block;
+
+    min-width: 100px;
+    height: 34px;
+    border: 0;
+    margin-bottom: 3px;
+
+    background: rgba(84, 203, 225, .3);
+
+    -webkit-appearance: none;
+    appearance: none;
+}
+/* controls */
