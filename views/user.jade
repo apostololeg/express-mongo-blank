@@ -1,0 +1,14 @@
+if username
+    h1 'Hello, #{username}'
+    form(class='outform', action='/signout', method='post')
+        button(class='button out')
+            'Выход'
+else
+    form(class='regform', action='/signin', method='post')
+        input(class='input', name='user', placeholder='username' type='text')
+        input(class='input', name='pswd', placeholder='password' type='password')
+        button(class='button login', disabled, type="submit")
+            'Вход'
+    button(class='button registration')
+        'Регистрация'
+    +js('js/user.js');

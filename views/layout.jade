@@ -1,8 +1,8 @@
 mixin css(src)
-    link(rel="stylesheet", href="/css/"+src)
+    link(rel="stylesheet", href=src)
 
 mixin js(src)
-    script(src="/js/"+src)
+    script(src=src)
 
 
 doctype html5
@@ -10,7 +10,11 @@ html
     head
         title #{title}
 
-        +css("base.css")
+        +css("css/base.css")
+        // libs
+        +js("socket.io/socket.io.js")
+        +js("lib/microjungle.min.js")
+        +js("lib/jquery.min.js")
     body
         div.content
             block content
@@ -21,7 +25,6 @@ html
                 port: #{port}
             };
 
+        // client scripts
+        +js("js/socket.io.js")
 
-        // scripts
-        +js("jquery.min.js")
-        +js("socket.io.js")

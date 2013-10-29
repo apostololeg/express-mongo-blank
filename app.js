@@ -1,5 +1,4 @@
 var http = require('http'),
-    db = require('./core/mongodb.js'),
     express = require('./core/express.js'),
     app = express.express(),
     server = http.createServer(app),

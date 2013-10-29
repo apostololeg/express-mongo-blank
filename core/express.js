@@ -1,7 +1,7 @@
 var http = require('http'),
     express = require('express'),
     stylus = require('stylus'),
-    config = require('../.config').params,
+    config = require('../.config.json'),
     routes = require('./routes.js'),
     path = require('path'),
     memoryStore = express.session.MemoryStore,
@@ -21,16 +21,19 @@ exports.configure = function(app){
 
     app
         .configure(function(){
+            var week = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7);
+
             app
                 .set('port', process.env.PORT || config.port)
                 .set('views', __dirname + '/../views')
                 .set('view engine', 'jade')
+                .use(express.bodyParser())
                 .use(express.cookieParser())
                 .use(express.session({
                     store: sessionStore,
                     secret: 'iuy9iu19dh983hsy',
-                    maxAge  : new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // week
-                    expires : new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // week
+                    maxAge  : week,
+                    expires : week,
                     key: 'express.sid'
                 }))
                 .use(app.router)
@@ -43,11 +46,8 @@ exports.configure = function(app){
 
     // роутинг
     app.get('/', routes.index);
-    // TODO: baseAuth
-    app.get('/signin', auth, routes.signin);
-    app.get('/signout', routes.signout);
-    app.get('/reg', routes.reg);
-    app.get('/profile', routes.profile);
+    app.post('/signout', routes.signout);
+    app.post('/signin', routes.signin);
 
 };
 
