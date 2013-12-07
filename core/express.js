@@ -1,11 +1,10 @@
 var http = require('http'),
-    express = require('express'),
-    stylus = require('stylus'),
-    config = require('../.config.json'),
-    routes = require('./routes.js'),
     path = require('path'),
-    memoryStore = express.session.MemoryStore,
-    sessionStore = new memoryStore();
+    stylus = require('stylus'),
+    express = require('express'),
+    routes = require('./routes.js'),
+    config = require('../.config.json'),
+    sessionStore = require('./sessions.js').memoryStore;
 
 exports.configure = function(app){
 
@@ -46,8 +45,9 @@ exports.configure = function(app){
 
     // роутинг
     app.get('/', routes.index);
-    app.post('/signout', routes.signout);
     app.post('/signin', routes.signin);
+    app.post('/signout', routes.signout);
+    app.get('/killall', routes.__signOutAll);
 
 };
 
@@ -61,4 +61,3 @@ exports.startServer = function(server, port){
 
 
 exports.express = express;
-exports.sessionStore = sessionStore;

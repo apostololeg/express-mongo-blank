@@ -1,6 +1,7 @@
 var db = require('./mongodb.js').db,
     users = db('test').collection('users'),
     sio = require('./socket.io.js'),
+        userSessions = require('./sessions.js').memoryStore.users = {},
     utils = require('./utils.js'),
     config = require('./../.config.json');
 
@@ -9,7 +10,14 @@ var db = require('./mongodb.js').db,
  * @param {object} res
  * @param {object} params – дополнительные параметры
  */
-function renderMain(res, params) {
+function renderTemplate(req, res, params) {
+
+    var session = userSessions[req.sessionID];
+
+    params.username = session
+        ? session.username
+        : undefined;
+
     res.render('main', utils.extend(params, config));
 }
 
@@ -22,7 +30,7 @@ utils.extend(exports, {
      */
     index: function(req, res) {
 
-        renderMain(res, {
+        renderTemplate(req, res, {
             title: 'main page',
             content: 'Hello!'
         });
@@ -36,7 +44,24 @@ utils.extend(exports, {
      */
     signin: function(req, res) {
 
-        renderMain(res, { title: 'Вход' });
+        var username = req.body.user;
+            password = req.body.pswd;
+
+        users.findOne({ username: username, password: password }, function(err, records) {
+
+            if (err) {
+                console.log( err );
+
+            } else {
+                userSessions[req.sessionID] = {
+                    username: username,
+                    ssid: req.sessionID
+                }
+            }
+
+            renderTemplate(req, res, err ? { err: 'Read error =_(' } : { username: username } );
+
+        });
 
     },
 
@@ -48,18 +73,33 @@ utils.extend(exports, {
     signout: function(req, res) {
 
         console.log('OUT');
-        // console.log( res );
-        // session = null;
+        delete req.session.authorized;
+        delete req.session.username;
+        req.session.destroy();
         // res.clearCookie('connect.sid');
         // res.send('Authentication required', 401);
 
-        renderMain(res, { title: 'good bye!' });
+        renderTemplate(req, res, { title: 'good bye!' });
 
     },
 
     /**
-     * Метод для отдачи на клиент шаблона запрашиваемого блока
-     * @param {string} name имя блока
+     * Сброс всех сессий
+     * @param {object} req
+     * @param {object} res
+     */
+    __signOutAll: function(req, res) {
+
+        userSessions = {};
+        console.log( userSessions );
+
+        renderTemplate(req, res, { title: 'All sessions was killed! >_<' });
+
+    },
+
+    /**
+     * Метод для получения шаблона запрашиваемого блока
+     * @param {string} name – имя блока
      * @return {json} шаблон блока в формате json
      */
     get: function(socket, name) {
